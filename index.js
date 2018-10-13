@@ -31,8 +31,11 @@ app.post('/headers', (req, res) => {
     if (error) {
       res.status(500).send({ error: error });
     } else {
+      const order = Object.keys(response.headers);
+      order.sort();
       res.render('headers', {
         headers: response.headers,
+        order: order,
         status: response.statusCode,
         title: 'headers',
         version: version
