@@ -8,7 +8,7 @@ const port = 3000;
 
 const app = express();
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   res.send('<form action="/headers" method="post"><input name="url" type="text"/><input type="submit" value="GO"/></form>');
