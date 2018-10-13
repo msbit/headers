@@ -46,5 +46,5 @@ app.post('/headers', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Running on ${port}`);
+  console.info(`Running on ${port}`);
 });
