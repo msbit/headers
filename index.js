@@ -37,7 +37,8 @@ app.post('/headers', (req, res) => {
         headers: response.headers,
         order: order,
         status: response.statusCode,
-        title: 'headers',
+        title: req.body.url,
+        url: req.body.url,
         version: version
       });
     }
