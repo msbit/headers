@@ -8,10 +8,12 @@ const port = 3000;
 
 const app = express();
 
+app.set('view engine', 'pug');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.send('<form action="/headers" method="post"><input name="url" type="text"/><input type="submit" value="GO"/></form>');
+  res.render('index', { title: 'index' });
 });
 
 app.get('/headers', (req, res) => res.redirect('/'));
@@ -25,12 +27,7 @@ app.post('/headers', (req, res) => {
     if (error) {
       res.status(500).send({ error: error });
     } else {
-      let body = '<table>';
-      Object.keys(response.headers).forEach((key) => {
-        body += `<tr><td>${key}</td><td>${response.headers[key]}</td></tr>`;
-      });
-      body += '</table>';
-      res.send(body);
+      res.render('headers', { headers: response.headers, title: 'headers' });
     }
   });
 });
