@@ -1,3 +1,4 @@
+const { version } = require('./package.json');
 const bodyParser = require('body-parser');
 const express = require('express');
 const request = require('request');
@@ -13,7 +14,10 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.render('index', { title: 'index' });
+  res.render('index', {
+    title: 'index',
+    version: version
+  });
 });
 
 app.get('/headers', (req, res) => res.redirect('/'));
@@ -27,7 +31,12 @@ app.post('/headers', (req, res) => {
     if (error) {
       res.status(500).send({ error: error });
     } else {
-      res.render('headers', { headers: response.headers, title: 'headers' });
+      res.render('headers', {
+        headers: response.headers,
+        status: response.statusCode,
+        title: 'headers',
+        version: version
+      });
     }
   });
 });

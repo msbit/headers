@@ -1,10 +1,11 @@
-doctype html
-html
-  head
-    title= title
-  body
-    table
-      each value, key in headers
-        tr
-          td= key
-          td= value
+extends layout.pug
+
+block content
+  table
+    tr
+      td status
+      td= status
+    each value, key in headers
+      tr
+        td= key
+        td= value
