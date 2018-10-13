@@ -27,8 +27,16 @@ app.post('/headers', (req, res) => {
     url: req.body.url
   };
   request.head(options, (error, response, body) => {
+    if (error) {
+      errorHeaders(req, res, error, response, body);
+      return;
+    }
     if (response.statusCode === 405) {
       request.get(options, (error, response, body) => {
+        if (error) {
+          errorHeaders(req, res, error, response, body);
+          return;
+        }
         handleHeaders(req, res, error, response, body);
       });
       return;
@@ -38,10 +46,6 @@ app.post('/headers', (req, res) => {
 });
 
 const handleHeaders = (req, res, error, response, body) => {
-  if (error) {
-    res.status(500).send({ error: error });
-    return;
-  }
   const order = Object.keys(response.headers);
   order.sort();
   res.render('headers', {
@@ -52,6 +56,19 @@ const handleHeaders = (req, res, error, response, body) => {
     url: req.body.url,
     version: version
   });
+};
+
+const errorHeaders = (req, res, error, response, body) => {
+  let errorBody = {
+    error: 'There has been an error'
+  };
+  if (error.errno) {
+    errorBody.error = error.errno;
+  }
+  if (error.reason) {
+    errorBody.error = error.reason;
+  }
+  res.status(500).send(errorBody);
 };
 
 app.listen(port, () => {
