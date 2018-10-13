@@ -24,26 +24,35 @@ app.get('/headers', (req, res) => res.redirect('/'));
 app.post('/headers', (req, res) => {
   const options = {
     headers: sanitisedRequestHeaders(req, req.headers),
-    method: 'head',
     url: req.body.url
   };
   request.head(options, (error, response, body) => {
-    if (error) {
-      res.status(500).send({ error: error });
-    } else {
-      const order = Object.keys(response.headers);
-      order.sort();
-      res.render('headers', {
-        headers: response.headers,
-        order: order,
-        status: response.statusCode,
-        title: req.body.url,
-        url: req.body.url,
-        version: version
+    if (response.statusCode === 405) {
+      request.get(options, (error, response, body) => {
+        handleHeaders(req, res, error, response, body);
       });
+      return;
     }
+    handleHeaders(req, res, error, response, body);
   });
 });
+
+const handleHeaders = (req, res, error, response, body) => {
+  if (error) {
+    res.status(500).send({ error: error });
+    return;
+  }
+  const order = Object.keys(response.headers);
+  order.sort();
+  res.render('headers', {
+    headers: response.headers,
+    order: order,
+    status: response.statusCode,
+    title: req.body.url,
+    url: req.body.url,
+    version: version
+  });
+};
 
 app.listen(port, () => {
   console.info(`Running on ${port}`);
