@@ -1,4 +1,4 @@
-const disallowedHeaders = ['host', 'if-none-match'];
+const disallowedHeaders = ['content-type', 'content-length', 'host', 'if-none-match'];
 
 module.exports = function (originalRequest, originalHeaders) {
   const headers = {};
