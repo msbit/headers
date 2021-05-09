@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => res.render('index', {
   title: 'index',
-  version: version
+  version
 }));
 
 app.get('/headers', (req, res) => res.redirect('/'));
@@ -48,11 +48,11 @@ const handleHeaders = (req, res, response) => {
     headers: Object.fromEntries(Object.entries(response.headers).map(([k, v]) => {
       return [k, Array.isArray(v) ? v.join("\n") : v];
     })),
-    order: order,
+    order,
     status: response.statusCode,
     title: req.body.url,
     url: req.body.url,
-    version: version
+    version
   });
 };
 
