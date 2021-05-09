@@ -26,29 +26,29 @@ app.post('/headers', (req, res) => {
     headers: sanitisedRequestHeaders(req, req.headers),
     url: req.body.url
   };
-  request.head(options, (error, response, body) => {
+  request.head(options, (error, response) => {
     if (error) {
-      errorHeaders(req, res, error, response, body);
+      errorHeaders(req, res, error, response);
       return;
     }
 
     if (response.statusCode !== 405) {
-      handleHeaders(req, res, error, response, body);
+      handleHeaders(req, res, error, response);
       return;
     }
 
-    request.get(options, (error, response, body) => {
+    request.get(options, (error, response) => {
       if (error) {
-        errorHeaders(req, res, error, response, body);
+        errorHeaders(req, res, error, response);
         return;
       }
 
-      handleHeaders(req, res, error, response, body);
+      handleHeaders(req, res, error, response);
     });
   });
 });
 
-const handleHeaders = (req, res, error, response, body) => {
+const handleHeaders = (req, res, error, response) => {
   const order = Object.keys(response.headers);
   order.sort();
   res.render('headers', {
@@ -61,7 +61,7 @@ const handleHeaders = (req, res, error, response, body) => {
   });
 };
 
-const errorHeaders = (req, res, error, response, body) => {
+const errorHeaders = (req, res, error, response) => {
   const errorBody = {
     error: 'There has been an error'
   };
