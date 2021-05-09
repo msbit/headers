@@ -3,12 +3,18 @@ extends layout.pug
 block content
   table
     tr
-      td url
-      td= url
+      td
+        pre url
+      td
+        pre= url
     tr
-      td status
-      td= status
+      td
+        pre status
+      td
+        pre= status
     each key in order
       tr
-        td= key
-        td= headers[key]
+        td
+          pre= key
+        td
+          pre= headers[key]
