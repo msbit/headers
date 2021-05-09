@@ -1,8 +1,8 @@
 const { version } = require('./package.json');
 const bodyParser = require('body-parser');
 const express = require('express');
-const request = require('request');
 
+const request = require('./request.js');
 const sanitisedRequestHeaders = require('./sanitised-request-headers.js');
 
 const port = 3000;
