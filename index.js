@@ -59,7 +59,7 @@ const handleHeaders = (req, res, error, response, body) => {
 };
 
 const errorHeaders = (req, res, error, response, body) => {
-  let errorBody = {
+  const errorBody = {
     error: 'There has been an error'
   };
   if (error.errno) {

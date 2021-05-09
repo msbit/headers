@@ -9,7 +9,7 @@ module.exports = function (originalRequest, originalHeaders) {
   disallowedHeaders.forEach((key) => delete headers[key]);
 
   const url = new URL(originalRequest.body.url);
-  headers['host'] = url.hostname;
+  headers.host = url.hostname;
 
   return headers;
 };
