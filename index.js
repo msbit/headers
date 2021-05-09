@@ -31,17 +31,20 @@ app.post('/headers', (req, res) => {
       errorHeaders(req, res, error, response, body);
       return;
     }
-    if (response.statusCode === 405) {
-      request.get(options, (error, response, body) => {
-        if (error) {
-          errorHeaders(req, res, error, response, body);
-          return;
-        }
-        handleHeaders(req, res, error, response, body);
-      });
+
+    if (response.statusCode !== 405) {
+      handleHeaders(req, res, error, response, body);
       return;
     }
-    handleHeaders(req, res, error, response, body);
+
+    request.get(options, (error, response, body) => {
+      if (error) {
+        errorHeaders(req, res, error, response, body);
+        return;
+      }
+
+      handleHeaders(req, res, error, response, body);
+    });
   });
 });
 
