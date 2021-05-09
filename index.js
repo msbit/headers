@@ -28,27 +28,27 @@ app.post('/headers', (req, res) => {
   };
   request.head(options, (error, response) => {
     if (error) {
-      errorHeaders(req, res, error, response);
+      errorHeaders(req, res, error);
       return;
     }
 
     if (response.statusCode !== 405) {
-      handleHeaders(req, res, error, response);
+      handleHeaders(req, res, response);
       return;
     }
 
     request.get(options, (error, response) => {
       if (error) {
-        errorHeaders(req, res, error, response);
+        errorHeaders(req, res, error);
         return;
       }
 
-      handleHeaders(req, res, error, response);
+      handleHeaders(req, res, response);
     });
   });
 });
 
-const handleHeaders = (req, res, error, response) => {
+const handleHeaders = (req, res, response) => {
   const order = Object.keys(response.headers);
   order.sort();
   res.render('headers', {
@@ -61,7 +61,7 @@ const handleHeaders = (req, res, error, response) => {
   });
 };
 
-const errorHeaders = (req, res, error, response) => {
+const errorHeaders = (req, res, error) => {
   const errorBody = {
     error: 'There has been an error'
   };
