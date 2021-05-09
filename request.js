@@ -3,7 +3,7 @@ const handlers = {
   'https:': require('https')
 };
 
-const execute = (method, options, callback) => {
+const execute = (method, options) => {
   const url = new URL(options.url);
   const req = handlers[url.protocol].request({
     headers: options.headers,
@@ -14,10 +14,14 @@ const execute = (method, options, callback) => {
     protocol: url.protocol
   });
 
-  req.on('response', res => callback(undefined, res));
-  req.on('error', error => callback(error));
+  const result = new Promise((resolve, reject) => {
+    req.on('response', res => resolve(res));
+    req.on('error', error => reject(error));
+  });
 
   req.end();
+
+  return result;
 };
 
 module.exports = {
