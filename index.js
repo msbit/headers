@@ -13,12 +13,10 @@ app.set('view engine', 'pug');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: 'index',
-    version: version
-  });
-});
+app.get('/', (req, res) => res.render('index', {
+  title: 'index',
+  version: version
+}));
 
 app.get('/headers', (req, res) => res.redirect('/'));
 app.post('/headers', async (req, res) => {
@@ -69,6 +67,4 @@ const errorHeaders = (req, res, error) => {
   res.status(500).send(errorBody);
 };
 
-app.listen(port, () => {
-  console.info(`Running on ${port}`);
-});
+app.listen(port, () => console.info(`Running on ${port}`));
