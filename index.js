@@ -21,31 +21,26 @@ app.get('/', (req, res) => {
 });
 
 app.get('/headers', (req, res) => res.redirect('/'));
-app.post('/headers', (req, res) => {
+app.post('/headers', async (req, res) => {
   const options = {
     headers: sanitisedRequestHeaders(req, req.headers),
     url: req.body.url
   };
-  request.head(options, (error, response) => {
-    if (error) {
-      errorHeaders(req, res, error);
-      return;
-    }
+
+  try {
+    let response = await request.head(options);
 
     if (response.statusCode !== 405) {
       handleHeaders(req, res, response);
       return;
     }
 
-    request.get(options, (error, response) => {
-      if (error) {
-        errorHeaders(req, res, error);
-        return;
-      }
+    response = await request.get(options);
 
-      handleHeaders(req, res, response);
-    });
-  });
+    handleHeaders(req, res, response);
+  } catch (error) {
+    errorHeaders(req, res, error);
+  }
 });
 
 const handleHeaders = (req, res, response) => {
