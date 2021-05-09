@@ -45,7 +45,9 @@ const handleHeaders = (req, res, response) => {
   const order = Object.keys(response.headers);
   order.sort();
   res.render('headers', {
-    headers: response.headers,
+    headers: Object.fromEntries(Object.entries(response.headers).map(([k, v]) => {
+      return [k, Array.isArray(v) ? v.join("\n") : v];
+    })),
     order: order,
     status: response.statusCode,
     title: req.body.url,
