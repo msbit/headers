@@ -1,6 +1,6 @@
 const disallowedHeaders = ['content-type', 'content-length', 'host', 'if-none-match'];
 
-module.exports = function (originalRequest, originalHeaders) {
+module.exports = (originalRequest, originalHeaders) => {
   const headers = {};
 
   Object.keys(originalHeaders).forEach((key) => {
