@@ -16,7 +16,7 @@
     "request": "~2.88.0"
   },
   "devDependencies": {
-    "eslint": "~5.16.0",
+    "eslint": "~7.26.0",
     "eslint-config-standard": "~12.0.0",
     "eslint-plugin-import": "~2.22.0",
     "eslint-plugin-node": "~7.0.0",
