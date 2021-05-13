@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (_, res) => res.render('index', { title: 'index', version }));
 
-app.get('/headers', (req, res) => res.redirect('/'));
+app.get('/headers', (_, res) => res.redirect('/'));
 app.post('/headers', async (req, res) => {
   try {
     const url = new URL(req.body.url);
@@ -38,11 +38,9 @@ app.post('/headers', async (req, res) => {
 });
 
 const handleHeaders = (req, res, { headers, statusCode }) => {
-  const order = Object.keys(headers);
-  order.sort();
   res.render('headers', {
     headers: mapValues(headers, v => Array.isArray(v) ? v.join('\n') : v),
-    order,
+    order: Object.keys(headers).sort(),
     status: statusCode,
     title: req.body.url,
     url: req.body.url,
