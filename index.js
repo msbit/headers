@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 
 const request = require('./request.js');
-const { sanitised } = require('./sanitised-request-headers.js');
+const { mapValues, sanitised } = require('./object-util.js');
 
 const port = 3000;
 
@@ -37,15 +37,13 @@ app.post('/headers', async (req, res) => {
   }
 });
 
-const handleHeaders = (req, res, response) => {
-  const order = Object.keys(response.headers);
+const handleHeaders = (req, res, { headers, statusCode }) => {
+  const order = Object.keys(headers);
   order.sort();
   res.render('headers', {
-    headers: Object.fromEntries(Object.entries(response.headers).map(([k, v]) => {
-      return [k, Array.isArray(v) ? v.join('\n') : v];
-    })),
+    headers: mapValues(headers, v => Array.isArray(v) ? v.join('\n') : v),
     order,
-    status: response.statusCode,
+    status: statusCode,
     title: req.body.url,
     url: req.body.url,
     version
@@ -60,4 +58,4 @@ const errorHeaders = (req, res, error) => {
   res.status(500).send(body);
 };
 
-app.listen(port, () => console.info(`Running on ${port}`));
+app.listen(port, _ => console.info(`Running on ${port}`));
