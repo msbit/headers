@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 
 const request = require('./request.js');
-const sanitisedRequestHeaders = require('./sanitised-request-headers.js');
+const { sanitised } = require('./sanitised-request-headers.js');
 
 const port = 3000;
 
@@ -13,19 +13,15 @@ app.set('view engine', 'pug');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => res.render('index', {
-  title: 'index',
-  version
-}));
+app.get('/', (_, res) => res.render('index', { title: 'index', version }));
 
 app.get('/headers', (req, res) => res.redirect('/'));
 app.post('/headers', async (req, res) => {
-  const options = {
-    headers: sanitisedRequestHeaders(req, req.headers),
-    url: req.body.url
-  };
-
   try {
+    const url = new URL(req.body.url);
+    const headers = sanitised(req.headers, { host: url.hostname });
+    const options = { headers, url };
+
     let response = await request.head(options);
 
     if (response.statusCode !== 405) {
@@ -46,7 +42,7 @@ const handleHeaders = (req, res, response) => {
   order.sort();
   res.render('headers', {
     headers: Object.fromEntries(Object.entries(response.headers).map(([k, v]) => {
-      return [k, Array.isArray(v) ? v.join("\n") : v];
+      return [k, Array.isArray(v) ? v.join('\n') : v];
     })),
     order,
     status: response.statusCode,
@@ -57,16 +53,11 @@ const handleHeaders = (req, res, response) => {
 };
 
 const errorHeaders = (req, res, error) => {
-  const errorBody = {
-    error: 'There has been an error'
-  };
-  if (error.errno) {
-    errorBody.error = error.errno;
-  }
-  if (error.reason) {
-    errorBody.error = error.reason;
-  }
-  res.status(500).send(errorBody);
+  console.log(error);
+  const body = { error: 'There has been an error' };
+  if (error.errno) { body.error = error.errno; }
+  if (error.reason) { body.error = error.reason; }
+  res.status(500).send(body);
 };
 
 app.listen(port, () => console.info(`Running on ${port}`));

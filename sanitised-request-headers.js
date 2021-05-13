@@ -1,15 +1,11 @@
-const disallowedHeaders = ['content-type', 'content-length', 'host', 'if-none-match'];
+const disallowed = ['content-type', 'content-length', 'host', 'if-none-match'];
 
-module.exports = (originalRequest, originalHeaders) => {
-  const headers = {};
+module.exports = {
+  sanitised: (headers, override) => {
+    const allowed = Object.entries(headers)
+      .map(([k, v]) => [k.toLowerCase(), v])
+      .filter(([k, v]) => !disallowed.includes(k));
 
-  Object.keys(originalHeaders).forEach((key) => {
-    headers[key.toLowerCase()] = originalHeaders[key];
-  });
-  disallowedHeaders.forEach((key) => delete headers[key]);
-
-  const url = new URL(originalRequest.body.url);
-  headers.host = url.hostname;
-
-  return headers;
+    return Object.fromEntries(allowed.concat(Object.entries(override)));
+  }
 };
